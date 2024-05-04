@@ -45,6 +45,32 @@ paths:
           $ref: "#/components/responses/response_ok"
         "500":
           $ref: "#/components/responses/response_internal_server_error"
+  /usage/cpu:
+    get:
+      summary: Get CPU usage
+      operationId: GetCPUUsage
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: string
+            format: timestamp
+          example: "1625101200"
+        - name: end
+          in: query
+          required: true
+          schema:
+            type: string
+            format: timestamp
+          example: "1625104800"
+      tags:
+        - Common methods
+      responses:
+        "200":
+          $ref: "#/components/responses/response_get_cpu_info_ok"
+        "500":
+          $ref: "#/components/responses/response_internal_server_error"
 
 components:
   securitySchemes:
@@ -108,6 +134,28 @@ components:
             $ref: "#/components/schemas/base_response"
           example:
             message: "Bad Request"
+    
+    response_unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/base_response"
+          example:
+            message: "Unauthorized"
+
+    response_get_cpu_info_ok:
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/base_response"
+              - properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/cpu_info"
 
   schemas:
     base_response: # Every response should inherit from BaseResponse
@@ -116,14 +164,25 @@ components:
           description: message returned by server side if there is any
           type: string
 
-    module:
+    cpu_info:
+      required:
+        - timestamp
+        - percent
       properties:
-        name:
-          description: zima-chat
+        timestamp:
+          description: timestamp of the data
           type: string
-        title:
-          description: Zima Chat
+          format: timestamp
+        percent:
+          description: CPU usage in percent
+          type: number
+    
+    memory_info:
+      properties:
+        timestamp:
+          description: timestamp of the data
           type: string
-        version:
-          description: module version
-          type: string
+          format: timestamp
+        percent:
+          description: Memory usage in percent
+          type: number

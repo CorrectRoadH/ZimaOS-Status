@@ -19,7 +19,7 @@ import (
 	echomiddleware "github.com/oapi-codegen/echo-middleware"
 )
 
-type ModManagement struct{}
+type StatusRoute struct{}
 
 var (
 	_swagger *openapi3.T
@@ -111,7 +111,7 @@ func GetDocRouter(docHTML string, docYAML string) http.Handler {
 }
 
 func NewModManagement() codegen.ServerInterface {
-	return &ModManagement{}
+	return &StatusRoute{}
 }
 
 func PropertiesFromQueryParams(httpCtx echo.Context) map[string]string {

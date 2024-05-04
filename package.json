@@ -1,0 +1,8 @@
+{
+	"scripts": {
+		"generate": "npx openapi-typescript \"api/**/*.yaml\" --output ./web/src/api/openapi.ts"
+	},
+	"devDependencies": {
+		"openapi-typescript": "^6.7.5"
+	}
+}

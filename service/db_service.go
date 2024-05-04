@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/CorrectRoadH/ZimaOS-Status/codegen"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -58,8 +59,30 @@ func (s *DBService) Init() {
 	fmt.Println("DBService initialized")
 }
 
-func (s *DBService) Query() {
-
+func (s *DBService) QueryCPUUsageHistory(start string, end string) ([]codegen.CpuInfo, error) {
+	sqlStmt := `SELECT * FROM CPUData WHERE timestamp BETWEEN ? AND ?`
+	rows, err := s.db.Query(sqlStmt, start, end)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+	history := []codegen.CpuInfo{}
+	for rows.Next() {
+		var id int
+		var timestamp string
+		var percent float64
+		err = rows.Scan(&id, &timestamp, &percent)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		history = append(history, codegen.CpuInfo{
+			Percent:   float32(percent),
+			Timestamp: timestamp,
+		})
+	}
+	return history, nil
 }
 
 func (s *DBService) InsertCPUData(value float64) {

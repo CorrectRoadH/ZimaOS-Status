@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 
+	"github.com/CorrectRoadH/ZimaOS-Status/codegen"
 	"github.com/IceWhaleTech/CasaOS-Common/utils/logger"
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
@@ -46,4 +47,8 @@ func (s *RecordService) StartRecord() {
 
 func (s *RecordService) StopRecord() {
 	s.crontab.Stop()
+}
+
+func (s *RecordService) GetCPUUsage(start string, end string) ([]codegen.CpuInfo, error) {
+	return MyService.DBService().QueryCPUUsageHistory(start, end)
 }
