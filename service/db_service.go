@@ -3,6 +3,8 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/CorrectRoadH/ZimaOS-Status/codegen"
 	_ "github.com/mattn/go-sqlite3"
@@ -59,9 +61,37 @@ func (s *DBService) Init() {
 	fmt.Println("DBService initialized")
 }
 
+func convertTimestamp(ts string) (int64, error) {
+	i, err := strconv.ParseInt(ts, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+	// 转换为Go的time.Time，然后格式化为SQLite可接受的格式
+
+	return i, nil
+}
+
 func (s *DBService) QueryCPUUsageHistory(start string, end string) ([]codegen.CpuInfo, error) {
+	startTime, err := convertTimestamp(start)
+	if err != nil {
+		return nil, err
+	}
+	endTime, err := convertTimestamp(end)
+	if err != nil {
+		return nil, err
+	}
+
+	startTimeSQL := time.Unix(startTime, 0).UTC().Format("2006-01-02 15:04:05")
+	if err != nil {
+		return nil, err
+	}
+	endTimeSQL := time.Unix(endTime, 0).UTC().Format("2006-01-02 15:04:05")
+	if err != nil {
+		return nil, err
+	}
+
 	sqlStmt := `SELECT * FROM CPUData WHERE timestamp BETWEEN ? AND ?`
-	rows, err := s.db.Query(sqlStmt, start, end)
+	rows, err := s.db.Query(sqlStmt, startTimeSQL, endTimeSQL)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err

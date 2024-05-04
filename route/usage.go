@@ -16,7 +16,7 @@ func (r *StatusRoute) GetCPUUsage(ctx echo.Context, param codegen.GetCPUUsagePar
 			Message: lo.ToPtr(err.Error()),
 		})
 	}
-	return ctx.JSON(http.StatusOK, codegen.BaseResponse{
-		Data: history,
+	return ctx.JSON(http.StatusOK, codegen.ResponseGetCpuInfoOk{
+		Data: lo.ToPtr(history),
 	})
 }

@@ -34,3 +34,6 @@ node_modules
 package-lock.json
 
 coverage.txt
+
+# dev file
+mydb.db

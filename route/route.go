@@ -1,19 +1,13 @@
 package route
 
 import (
-	"crypto/ecdsa"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 
 	"github.com/CorrectRoadH/ZimaOS-Status/codegen"
-	"github.com/CorrectRoadH/ZimaOS-Status/config"
-	"github.com/IceWhaleTech/CasaOS-Common/external"
-	"github.com/IceWhaleTech/CasaOS-Common/utils/jwt"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/getkin/kin-openapi/openapi3filter"
-	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echomiddleware "github.com/oapi-codegen/echo-middleware"
@@ -63,26 +57,26 @@ func GetRouter() http.Handler {
 
 	e.Use(middleware.Logger())
 
-	e.Use(echojwt.WithConfig(echojwt.Config{
-		Skipper: func(c echo.Context) bool {
-			return c.RealIP() == "::1" || c.RealIP() == "127.0.0.1"
-		},
-		ParseTokenFunc: func(c echo.Context, token string) (any, error) {
-			valid, claims, err := jwt.Validate(token, func() (*ecdsa.PublicKey, error) { return external.GetPublicKey(config.CommonInfo.RuntimePath) })
-			if err != nil || !valid {
-				return nil, echo.ErrUnauthorized
-			}
+	// e.Use(echojwt.WithConfig(echojwt.Config{
+	// 	Skipper: func(c echo.Context) bool {
+	// 		return c.RealIP() == "::1" || c.RealIP() == "127.0.0.1"
+	// 	},
+	// 	ParseTokenFunc: func(c echo.Context, token string) (any, error) {
+	// 		valid, claims, err := jwt.Validate(token, func() (*ecdsa.PublicKey, error) { return external.GetPublicKey(config.CommonInfo.RuntimePath) })
+	// 		if err != nil || !valid {
+	// 			return nil, echo.ErrUnauthorized
+	// 		}
 
-			c.Request().Header.Set("user_id", strconv.Itoa(claims.ID))
+	// 		c.Request().Header.Set("user_id", strconv.Itoa(claims.ID))
 
-			return claims, nil
-		},
-		TokenLookupFuncs: []middleware.ValuesExtractor{
-			func(c echo.Context) ([]string, error) {
-				return []string{c.Request().Header.Get(echo.HeaderAuthorization)}, nil
-			},
-		},
-	}))
+	// 		return claims, nil
+	// 	},
+	// 	TokenLookupFuncs: []middleware.ValuesExtractor{
+	// 		func(c echo.Context) ([]string, error) {
+	// 			return []string{c.Request().Header.Get(echo.HeaderAuthorization)}, nil
+	// 		},
+	// 	},
+	// }))
 
 	e.Use(echomiddleware.OapiRequestValidatorWithOptions(_swagger, &echomiddleware.Options{
 		Options: openapi3filter.Options{AuthenticationFunc: openapi3filter.NoopAuthenticationFunc},

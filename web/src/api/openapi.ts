@@ -9,6 +9,10 @@ export interface paths {
     /** Get information about the host */
     get: operations["HelloWorld"];
   };
+  "/usage/cpu": {
+    /** Get CPU usage */
+    get: operations["GetCPUUsage"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -19,13 +23,23 @@ export interface components {
       /** @description message returned by server side if there is any */
       message?: string;
     };
-    module: {
-      /** @description zima-chat */
-      name?: string;
-      /** @description Zima Chat */
-      title?: string;
-      /** @description module version */
-      version?: string;
+    cpu_info: {
+      /**
+       * Format: timestamp
+       * @description timestamp of the data
+       */
+      timestamp: string;
+      /** @description CPU usage in percent */
+      percent: number;
+    };
+    memory_info: {
+      /**
+       * Format: timestamp
+       * @description timestamp of the data
+       */
+      timestamp?: string;
+      /** @description Memory usage in percent */
+      percent?: number;
     };
   };
   responses: {
@@ -59,6 +73,20 @@ export interface components {
         "application/json": components["schemas"]["base_response"];
       };
     };
+    /** @description Unauthorized */
+    response_unauthorized: {
+      content: {
+        "application/json": components["schemas"]["base_response"];
+      };
+    };
+    /** @description OK */
+    response_get_cpu_info_ok: {
+      content: {
+        "application/json": components["schemas"]["base_response"] & {
+          data?: components["schemas"]["cpu_info"][];
+        };
+      };
+    };
   };
   parameters: {
     name: string;
@@ -78,6 +106,21 @@ export interface operations {
   HelloWorld: {
     responses: {
       200: components["responses"]["response_ok"];
+      500: components["responses"]["response_internal_server_error"];
+    };
+  };
+  /** Get CPU usage */
+  GetCPUUsage: {
+    parameters: {
+      query: {
+        /** @example 1625101200 */
+        start: string;
+        /** @example 1625104800 */
+        end: string;
+      };
+    };
+    responses: {
+      200: components["responses"]["response_get_cpu_info_ok"];
       500: components["responses"]["response_internal_server_error"];
     };
   };
