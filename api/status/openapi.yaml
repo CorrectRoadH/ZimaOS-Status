@@ -45,7 +45,19 @@ paths:
           $ref: "#/components/responses/response_ok"
         "500":
           $ref: "#/components/responses/response_internal_server_error"
-  /usage/cpu:
+  /usage:
+    get:
+      summary: Get Current all performance usage
+      operationId: GetUsage
+      tags:
+        - Common methods
+      responses:
+        "200":
+          $ref: "#/components/responses/response_get_performance_usage_ok"
+        "500":
+          $ref: "#/components/responses/response_internal_server_error"
+
+  /history/cpu:
     get:
       summary: Get CPU usage
       operationId: GetCPUUsage
@@ -157,6 +169,16 @@ components:
                     items:
                       $ref: "#/components/schemas/cpu_info"
 
+    response_get_performance_usage_ok:
+      description: OK
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: "#/components/schemas/base_response"
+              - properties:
+                  data:
+                    $ref: "#/components/schemas/performance_usage"
   schemas:
     base_response: # Every response should inherit from BaseResponse
       properties:
@@ -178,6 +200,9 @@ components:
           type: number
     
     memory_info:
+      required:
+        - timestamp
+        - percent
       properties:
         timestamp:
           description: timestamp of the data
@@ -186,3 +211,12 @@ components:
         percent:
           description: Memory usage in percent
           type: number
+    
+    performance_usage:
+      properties:
+        cpu:
+          description: CPU usage
+          $ref: "#/components/schemas/cpu_info"
+        memory:
+          description: Memory usage
+          $ref: "#/components/schemas/memory_info"

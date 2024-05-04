@@ -4,9 +4,29 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import React from 'react';
 
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  Link,
+} from "react-router-dom";
+import CPUPage from './CPU';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "/cpu",
+    element: <CPUPage />,
+  },
+]);
+
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+      <RouterProvider router={router} />
   </React.StrictMode>
 )
 

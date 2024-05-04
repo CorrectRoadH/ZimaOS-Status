@@ -4,25 +4,43 @@ import useSWR from 'swr';
 
 const client = createClient<paths>({ baseUrl: "http://172.17.193.155/v2/status/" });
 
-async function  getData(){
-    const currentTimestamp = new Date().getTime();
-    const OneMinuteAgo = 0;
+// async function  getData(){
+//     const currentTimestamp = new Date().getTime();
+//     const OneMinuteAgo = 0;
+//     const {
+//         data, // only present if 2XX response
+//         error, // only present if 4XX or 5XX response
+//       } = await client.GET("/usage/cpu",{
+//         params: {
+//             query: { 
+//                 start: OneMinuteAgo.toString(),
+//                 end: currentTimestamp.toString(),
+//             },
+//         }});
+//       return data?.data|| [];
+    
+// }
+
+// const useCPUUsage = () => {
+//     const {data,isLoading,error}= useSWR('cpu',getData);
+    
+//     return {
+//         data,
+//         isLoading,
+//         error,
+//     }
+// }
+
+async function  getCurrentUsage(){
     const {
         data, // only present if 2XX response
         error, // only present if 4XX or 5XX response
-      } = await client.GET("/usage/cpu",{
-        params: {
-            query: { 
-                start: OneMinuteAgo.toString(),
-                end: currentTimestamp.toString(),
-            },
-        }});
-      return data?.data|| [];
-    
+      } = await client.GET("/usage");
+      return data?.data;
 }
 
-const useCPUUsage = () => {
-    const {data,isLoading,error}= useSWR('cpu',getData);
+const useUsage = () => {
+    const {data,isLoading,error}= useSWR('usage',getCurrentUsage);
     
     return {
         data,
@@ -31,4 +49,5 @@ const useCPUUsage = () => {
     }
 }
 
-export {useCPUUsage};
+
+export {useUsage};

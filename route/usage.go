@@ -20,3 +20,21 @@ func (r *StatusRoute) GetCPUUsage(ctx echo.Context, param codegen.GetCPUUsagePar
 		Data: lo.ToPtr(history),
 	})
 }
+
+func (r *StatusRoute) GetUsage(ctx echo.Context) error {
+	cpu, err := service.MyService.DBService().LatestCPUUsage()
+	mem, err2 := service.MyService.DBService().LatestMemUsage()
+	if err != nil || err2 != nil {
+		return ctx.JSON(http.StatusInternalServerError, codegen.BaseResponse{
+			Message: lo.ToPtr(err.Error()),
+		})
+	}
+
+	currenctPerformance := codegen.PerformanceUsage{
+		Cpu:    &cpu,
+		Memory: &mem,
+	}
+	return ctx.JSON(http.StatusOK, codegen.ResponseGetPerformanceUsageOk{
+		Data: &currenctPerformance,
+	})
+}

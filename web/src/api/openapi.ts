@@ -9,7 +9,11 @@ export interface paths {
     /** Get information about the host */
     get: operations["HelloWorld"];
   };
-  "/usage/cpu": {
+  "/usage": {
+    /** Get Current all performance usage */
+    get: operations["GetUsage"];
+  };
+  "/history/cpu": {
     /** Get CPU usage */
     get: operations["GetCPUUsage"];
   };
@@ -37,9 +41,15 @@ export interface components {
        * Format: timestamp
        * @description timestamp of the data
        */
-      timestamp?: string;
+      timestamp: string;
       /** @description Memory usage in percent */
-      percent?: number;
+      percent: number;
+    };
+    performance_usage: {
+      /** @description CPU usage */
+      cpu?: components["schemas"]["cpu_info"];
+      /** @description Memory usage */
+      memory?: components["schemas"]["memory_info"];
     };
   };
   responses: {
@@ -87,6 +97,14 @@ export interface components {
         };
       };
     };
+    /** @description OK */
+    response_get_performance_usage_ok: {
+      content: {
+        "application/json": components["schemas"]["base_response"] & {
+          data?: components["schemas"]["performance_usage"];
+        };
+      };
+    };
   };
   parameters: {
     name: string;
@@ -106,6 +124,13 @@ export interface operations {
   HelloWorld: {
     responses: {
       200: components["responses"]["response_ok"];
+      500: components["responses"]["response_internal_server_error"];
+    };
+  };
+  /** Get Current all performance usage */
+  GetUsage: {
+    responses: {
+      200: components["responses"]["response_get_performance_usage_ok"];
       500: components["responses"]["response_internal_server_error"];
     };
   };

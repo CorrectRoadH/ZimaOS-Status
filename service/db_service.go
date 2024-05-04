@@ -71,6 +71,59 @@ func convertTimestamp(ts string) (int64, error) {
 	return i, nil
 }
 
+func (s *DBService) LatestCPUUsage() (codegen.CpuInfo, error) {
+	cpu := codegen.CpuInfo{}
+
+	sqlStmt := `SELECT * FROM CPUData ORDER BY timestamp DESC LIMIT 1`
+	rows, err := s.db.Query(sqlStmt)
+	if err != nil {
+		fmt.Println(err)
+		return cpu, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var timestamp string
+		var percent float64
+		err = rows.Scan(&id, &timestamp, &percent)
+		if err != nil {
+			fmt.Println(err)
+			return cpu, err
+		}
+		cpu = codegen.CpuInfo{
+			Percent:   float32(percent),
+			Timestamp: timestamp,
+		}
+	}
+	return cpu, nil
+}
+
+func (s *DBService) LatestMemUsage() (codegen.MemoryInfo, error) {
+	mem := codegen.MemoryInfo{}
+	sqlStmt := `SELECT * FROM MemData ORDER BY timestamp DESC LIMIT 1`
+	rows, err := s.db.Query(sqlStmt)
+	if err != nil {
+		fmt.Println(err)
+		return mem, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var timestamp string
+		var percent float64
+		err = rows.Scan(&id, &timestamp, &percent)
+		if err != nil {
+			fmt.Println(err)
+			return mem, err
+		}
+		mem = codegen.MemoryInfo{
+			Percent:   float32(percent),
+			Timestamp: timestamp,
+		}
+	}
+	return mem, nil
+}
+
 func (s *DBService) QueryCPUUsageHistory(start string, end string) ([]codegen.CpuInfo, error) {
 	startTime, err := convertTimestamp(start)
 	if err != nil {
