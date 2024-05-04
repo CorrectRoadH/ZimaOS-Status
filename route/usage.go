@@ -9,7 +9,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func (r *StatusRoute) GetCPUUsage(ctx echo.Context, param codegen.GetCPUUsageParams) error {
+func (r *StatusRoute) GetCPUUsageHistory(ctx echo.Context, param codegen.GetCPUUsageHistoryParams) error {
 	history, err := service.MyService.RecordService().GetCPUUsage(param.Start, param.End)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, codegen.BaseResponse{

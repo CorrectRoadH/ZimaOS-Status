@@ -14,8 +14,8 @@ export interface paths {
     get: operations["GetUsage"];
   };
   "/history/cpu": {
-    /** Get CPU usage */
-    get: operations["GetCPUUsage"];
+    /** Get CPU usage history */
+    get: operations["GetCPUUsageHistory"];
   };
 }
 
@@ -134,8 +134,8 @@ export interface operations {
       500: components["responses"]["response_internal_server_error"];
     };
   };
-  /** Get CPU usage */
-  GetCPUUsage: {
+  /** Get CPU usage history */
+  GetCPUUsageHistory: {
     parameters: {
       query: {
         /** @example 1625101200 */

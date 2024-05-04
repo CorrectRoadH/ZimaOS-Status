@@ -59,8 +59,8 @@ paths:
 
   /history/cpu:
     get:
-      summary: Get CPU usage
-      operationId: GetCPUUsage
+      summary: Get CPU usage history
+      operationId: GetCPUUsageHistory
       parameters:
         - name: start
           in: query

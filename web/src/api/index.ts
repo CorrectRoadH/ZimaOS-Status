@@ -4,32 +4,34 @@ import useSWR from 'swr';
 
 const client = createClient<paths>({ baseUrl: "http://172.17.193.155/v2/status/" });
 
-// async function  getData(){
-//     const currentTimestamp = new Date().getTime();
-//     const OneMinuteAgo = 0;
-//     const {
-//         data, // only present if 2XX response
-//         error, // only present if 4XX or 5XX response
-//       } = await client.GET("/usage/cpu",{
-//         params: {
-//             query: { 
-//                 start: OneMinuteAgo.toString(),
-//                 end: currentTimestamp.toString(),
-//             },
-//         }});
-//       return data?.data|| [];
+async function  getCPUHistoryData(){
+    const currentTimestamp = new Date().getTime();
+    const OneMinuteAgo = 0;
+    const {
+        data, // only present if 2XX response
+        error, // only present if 4XX or 5XX response
+      } = await client.GET("/history/cpu",{
+        params: {
+            query: { 
+                start: OneMinuteAgo.toString(),
+                end: currentTimestamp.toString(),
+            },
+        }});
+      return data?.data|| [];
     
-// }
+}
 
-// const useCPUUsage = () => {
-//     const {data,isLoading,error}= useSWR('cpu',getData);
+const useCPUUsageHistory = () => {
+    const {data,isLoading,error}= useSWR('cpu',getCPUHistoryData, {
+        refreshInterval: 3000, // 3秒钟
+      });
     
-//     return {
-//         data,
-//         isLoading,
-//         error,
-//     }
-// }
+    return {
+        data,
+        isLoading,
+        error,
+    }
+}
 
 async function  getCurrentUsage(){
     const {
@@ -52,4 +54,4 @@ const useUsage = () => {
 }
 
 
-export {useUsage};
+export {useUsage,useCPUUsageHistory};

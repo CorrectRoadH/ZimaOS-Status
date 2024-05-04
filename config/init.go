@@ -12,6 +12,8 @@ import (
 	"gopkg.in/ini.v1"
 )
 
+const DefaultDataPath = "/DATA/zimaos-status"
+
 var (
 	ModManagementConfigFilePath = filepath.Join(constants.DefaultConfigPath, "mod-management.conf")
 
@@ -26,6 +28,8 @@ var (
 		LogPath:     constants.DefaultLogPath,
 		LogSaveName: common.ServiceName,
 		LogFileExt:  "log",
+
+		DataPath: DefaultDataPath,
 	}
 )
 
