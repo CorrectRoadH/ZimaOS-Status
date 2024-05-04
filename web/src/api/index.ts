@@ -40,7 +40,9 @@ async function  getCurrentUsage(){
 }
 
 const useUsage = () => {
-    const {data,isLoading,error}= useSWR('usage',getCurrentUsage);
+    const {data,isLoading,error}= useSWR('usage',getCurrentUsage, {
+        refreshInterval: 3000, // 3秒钟
+      });
     
     return {
         data,

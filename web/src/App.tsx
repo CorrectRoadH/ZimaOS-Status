@@ -27,9 +27,9 @@ function App() {
         </div>
         
         <div className='flex gap-4 flex-wrap'>
-          <PerformanceCard title='CPU占用率' value={`${data?.cpu}%`} />
+          <PerformanceCard title='CPU占用率' value={`${Math.ceil(data?.cpu?.percent||0)}%`} />
 
-          <PerformanceCard title='内存占用率' value={`${data?.memory}%`} />
+          <PerformanceCard title='内存占用率' value={`${Math.ceil(data?.memory?.percent||0)}%`} />
         </div>
       </div>
     </div>
