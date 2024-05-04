@@ -1,0 +1,11 @@
+[Unit]
+After=casaos-gateway.service
+Description=ZimaOS Module Management Service
+
+[Service]
+ExecStart=/usr/bin/zimaos-mod-management
+Restart=always
+Type=notify
+
+[Install]
+WantedBy=multi-user.target

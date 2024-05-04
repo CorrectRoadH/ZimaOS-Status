@@ -1,0 +1,53 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+project_name: zimaos-mod-management
+before:
+  hooks:
+    - go generate
+    - go mod tidy
+    - go test -race -v ./... -timeout 30m
+builds:
+  - id: zimaos-mod-management-amd64
+    binary: build/sysroot/usr/bin/zimaos-mod-management
+    env:
+      - CC=x86_64-linux-gnu-gcc
+    gcflags:
+      - all=-N -l
+    ldflags:
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+    tags:
+      - musl
+      - netgo
+      - osusergo
+    goos:
+      - linux
+    goarch:
+      - amd64
+
+archives:
+  - name_template: >-
+      {{ .Os }}-{{- if eq .Arch "arm" }}arm-7{{- else }}{{ .Arch }}{{- end }}-{{ .ProjectName }}-v{{ .Version }}
+    id: zimaos-mod-management
+    builds:
+      - zimaos-mod-management-amd64
+    files:
+      - build/**/*
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ incpatch .Version }}-snapshot"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+release:
+  github:
+    owner: IceWhaleTech
+    name: ZimaOS-ModManagement
+  draft: true
+  prerelease: auto
+  mode: replace
+  name_template: "v{{ .Version }}"

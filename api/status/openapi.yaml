@@ -1,0 +1,129 @@
+openapi: 3.0.3
+
+info:
+  title: ZimaOS Status API
+  version: v2
+
+servers:
+  - url: /v2/status
+
+tags:
+  - name: Common methods
+    description: |-
+      methods for common usage
+
+  - name: Web methods
+    description: |-
+      methods for web interface (INTERNAL USE ONLY)
+
+  - name: Module Info
+    description: |-
+      <SchemaDefinition schemaRef="#/components/schemas/module" />
+    
+x-tagGroups:
+  - name: Methods
+    tags:
+      - Common methods
+      - Web methods
+
+  - name: Schemas
+    tags:
+      - Module Info
+
+security:
+  - access_token: []
+
+paths:
+  /:
+    get:
+      summary: Get information about the host
+      operationId: HelloWorld
+      tags:
+        - Common methods
+      responses:
+        "200":
+          $ref: "#/components/responses/response_ok"
+        "500":
+          $ref: "#/components/responses/response_internal_server_error"
+
+components:
+  securitySchemes:
+    access_token:
+      type: apiKey
+      in: header
+      name: Authorization
+
+  parameters:
+    name:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+        example: "847d7fde"
+
+  responses:
+    response_ok:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/base_response"
+          example:
+            message: "OK"
+      x-go-name: ResponseOK
+
+    response_conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/base_response"
+          example:
+            message: "Conflict"
+
+    response_internal_server_error:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/base_response"
+          example:
+            message: "Internal Server Error"
+
+    response_not_found:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/base_response"
+          example:
+            message: "Not Found"
+
+    response_bad_request:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/base_response"
+          example:
+            message: "Bad Request"
+
+  schemas:
+    base_response: # Every response should inherit from BaseResponse
+      properties:
+        message:
+          description: message returned by server side if there is any
+          type: string
+
+    module:
+      properties:
+        name:
+          description: zima-chat
+          type: string
+        title:
+          description: Zima Chat
+          type: string
+        version:
+          description: module version
+          type: string
