@@ -1,4 +1,5 @@
-import { useUsage } from "./api";
+"use client"
+import { useUsage } from "@/lib/api";
 
 interface PerformanceCardProps {
   title: string;
@@ -15,9 +16,7 @@ function PerformanceCard({title,value}:PerformanceCardProps) {
     </div>
   )
 }
-
-function App() {
-
+export default function Home() {
   const { data, isLoading } = useUsage();
   return (
     <div className="flex w-screen h-screen bg-black text-white">
@@ -35,5 +34,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
