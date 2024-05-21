@@ -19,7 +19,7 @@ func TestGet15MinsRecord(t *testing.T) {
 	rs.StopRecord()
 	endTimeStamp := time.Now().Unix()
 
-	cpuHistory, err := rs.GetCPUUsage(fmt.Sprint(startTimeStamp), fmt.Sprint(endTimeStamp))
+	cpuHistory, err := rs.GetCPUUsageHistory(fmt.Sprint(startTimeStamp), fmt.Sprint(endTimeStamp))
 	assert.Nil(t, err)
 	assert.Equal(t, 5, len(cpuHistory))
 }

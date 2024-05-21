@@ -10,7 +10,7 @@ import (
 )
 
 func (r *StatusRoute) GetCPUUsageHistory(ctx echo.Context, param codegen.GetCPUUsageHistoryParams) error {
-	history, err := service.MyService.RecordService().GetCPUUsage(param.Start, param.End)
+	history, err := service.MyService.RecordService().GetCPUUsageHistory(param.Start, param.End)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, codegen.BaseResponse{
 			Message: lo.ToPtr(err.Error()),

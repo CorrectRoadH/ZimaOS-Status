@@ -168,6 +168,50 @@ func (s *DBService) QueryCPUUsageHistory(start string, end string) ([]codegen.Cp
 	return history, nil
 }
 
+func (s *DBService) QueryMemUsageHistory(start string, end string) ([]codegen.MemoryInfo, error) {
+	startTime, err := convertTimestamp(start)
+	if err != nil {
+		return nil, err
+	}
+	endTime, err := convertTimestamp(end)
+	if err != nil {
+		return nil, err
+	}
+
+	startTimeSQL := time.Unix(startTime, 0).UTC().Format("2006-01-02 15:04:05")
+	if err != nil {
+		return nil, err
+	}
+	endTimeSQL := time.Unix(endTime, 0).UTC().Format("2006-01-02 15:04:05")
+	if err != nil {
+		return nil, err
+	}
+
+	sqlStmt := `SELECT * FROM MemData WHERE timestamp BETWEEN ? AND ?`
+	rows, err := s.db.Query(sqlStmt, startTimeSQL, endTimeSQL)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+	history := []codegen.MemoryInfo{}
+	for rows.Next() {
+		var id int
+		var timestamp string
+		var percent float64
+		err = rows.Scan(&id, &timestamp, &percent)
+		if err != nil {
+			fmt.Println(err)
+			return nil, err
+		}
+		history = append(history, codegen.MemoryInfo{
+			Percent:   float32(percent),
+			Timestamp: timestamp,
+		})
+	}
+	return history, nil
+}
+
 func (s *DBService) InsertCPUData(value float64) {
 	sqlStmt := `INSERT INTO CPUData (timestamp, percent) VALUES (datetime('now'), ?)`
 	_, err := s.db.Exec(sqlStmt, value)

@@ -130,7 +130,7 @@ func main() {
 			logger.Info("This process is not running as a systemd service.")
 		}
 
-		logger.Info("Virtualization management service is listening...", zap.Any("address", listener.Addr().String()))
+		logger.Info("Status service is listening...", zap.Any("address", listener.Addr().String()))
 	}
 
 	s := &http.Server{

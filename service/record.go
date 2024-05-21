@@ -49,6 +49,18 @@ func (s *RecordService) StopRecord() {
 	s.crontab.Stop()
 }
 
-func (s *RecordService) GetCPUUsage(start string, end string) ([]codegen.CpuInfo, error) {
+func (s *RecordService) GetCPUUsageHistory(start string, end string) ([]codegen.CpuInfo, error) {
 	return MyService.DBService().QueryCPUUsageHistory(start, end)
+}
+
+func (s *RecordService) GetCPUUsage() (codegen.CpuInfo, error) {
+	return MyService.DBService().LatestCPUUsage()
+}
+
+func (s *RecordService) GetMemoryUsageHistory(start string, end string) ([]codegen.MemoryInfo, error) {
+	return MyService.DBService().QueryMemUsageHistory(start, end)
+}
+
+func (s *RecordService) GetMemoryUsage() (codegen.MemoryInfo, error) {
+	return MyService.DBService().LatestMemUsage()
 }
