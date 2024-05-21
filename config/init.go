@@ -28,8 +28,6 @@ var (
 		LogPath:     constants.DefaultLogPath,
 		LogSaveName: common.ServiceName,
 		LogFileExt:  "log",
-
-		// DataPath: DefaultDataPath,
 	}
 )
 

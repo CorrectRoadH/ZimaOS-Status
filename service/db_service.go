@@ -14,8 +14,12 @@ type DBService struct {
 	db *sql.DB
 }
 
+const (
+	DataPath = "/DATA/AppData/ZimaOS-Status"
+)
+
 func NewDBService() *DBService {
-	db, err := sql.Open("sqlite3", "file:mydb.db?cache=shared&mode=rwc")
+	db, err := sql.Open("sqlite3", "file:"+DataPath+"data.db?cache=shared&mode=rwc")
 	if err != nil {
 		panic(err)
 	}
@@ -179,13 +183,7 @@ func (s *DBService) QueryMemUsageHistory(start string, end string) ([]codegen.Me
 	}
 
 	startTimeSQL := time.Unix(startTime, 0).UTC().Format("2006-01-02 15:04:05")
-	if err != nil {
-		return nil, err
-	}
 	endTimeSQL := time.Unix(endTime, 0).UTC().Format("2006-01-02 15:04:05")
-	if err != nil {
-		return nil, err
-	}
 
 	sqlStmt := `SELECT * FROM MemData WHERE timestamp BETWEEN ? AND ?`
 	rows, err := s.db.Query(sqlStmt, startTimeSQL, endTimeSQL)
