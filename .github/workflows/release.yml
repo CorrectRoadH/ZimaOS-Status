@@ -60,6 +60,10 @@ jobs:
         working-directory: ./web
         run: |
           pnpm build
+
+      - name: Generate code
+        run: |
+          go generate
       
       - name: Build Backend
         run: |
