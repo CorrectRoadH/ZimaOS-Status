@@ -15,11 +15,11 @@ type DBService struct {
 }
 
 const (
-	DataPath = "/DATA/AppData/ZimaOS-Status"
+	DataPath = "/DATA/AppData/zimaos-status"
 )
 
 func NewDBService() *DBService {
-	db, err := sql.Open("sqlite3", "file:"+DataPath+"data.db?cache=shared&mode=rwc")
+	db, err := sql.Open("sqlite3", "file:"+DataPath+"/data.db?cache=shared&mode=rwc")
 	if err != nil {
 		panic(err)
 	}

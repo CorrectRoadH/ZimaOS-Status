@@ -67,7 +67,7 @@ jobs:
       
       - name: Build Backend
         run: |
-          go build -o ./raw/usr/bin/zimaos_status ./main.go
+          go build -o ./raw/usr/bin/zimaos-status ./main.go
 
       - name: build modules file
         run: |
