@@ -7,8 +7,8 @@ before:
     - go mod tidy
     - go test -race -v ./... -timeout 30m
 builds:
-  - id: zimaos-mod-management-amd64
-    binary: build/sysroot/usr/bin/zimaos-mod-management
+  - id: zimaos-status-amd64
+    binary: raw/usr/bin/zimaos-status
     env:
       - CC=x86_64-linux-gnu-gcc
     ldflags:
@@ -25,15 +25,6 @@ builds:
     goarch:
       - amd64
 
-archives:
-  - name_template: >-
-      {{ .Os }}-{{- if eq .Arch "arm" }}arm-7{{- else }}{{ .Arch }}{{- end }}-{{ .ProjectName }}-v{{ .Version }}
-    id: zimaos-mod-management
-    builds:
-      - zimaos-mod-management-amd64
-    files:
-      - build/**/*
-
 checksum:
   name_template: "checksums.txt"
 snapshot:
@@ -44,11 +35,3 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
-release:
-  github:
-    owner: IceWhaleTech
-    name: ZimaOS-ModManagement
-  draft: true
-  prerelease: auto
-  mode: replace
-  name_template: "v{{ .Version }}"

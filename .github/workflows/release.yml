@@ -19,12 +19,15 @@ jobs:
             upx libc6-dev-amd64-cross \
             gcc-aarch64-linux-gnu libc6-dev-arm64-cross \
             gcc-arm-linux-gnueabihf libc6-dev-armhf-cross
+            
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Fetch all tags
         run: git fetch --force --tags
+
       - name: Get version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
@@ -32,23 +35,32 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: "1.21"
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
+
+      # install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          # either 'goreleaser' (default) or 'goreleaser-pro'
-          distribution: goreleaser
-          version: latest
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload to oss
-        id: upload_to_oss
-        uses: tvrcgo/upload-to-oss@master
+          version: 8
+
+      # setup node
+      - name: Setup Node.js LTS
+        uses: actions/setup-node@v4
         with:
-          key-id: ${{ secrets.OSS_KEY_ID }}
-          key-secret: ${{ secrets.OSS_KEY_SECRET }}
-          region: oss-cn-shanghai
-          bucket: casaos
-          assets: |
-            dist/checksums.txt:/IceWhaleTech/ZimaOS-ModManagement/releases/download/${{ steps.get_version.outputs.VERSION }}/checksums.txt
-            dist/linux-amd64-zimaos-mod-management-${{ steps.get_version.outputs.VERSION }}.tar.gz:/IceWhaleTech/ZimaOS-ModManagement/releases/download/${{ steps.get_version.outputs.VERSION }}/linux-amd64-zimaos-mod-management-${{ steps.get_version.outputs.VERSION }}.tar.gz
+          cache-dependency-path: web/pnpm-lock.yaml
+          node-version: lts/iron
+          cache: 'pnpm'
+
+      # install dependencies
+      - name: Install dependencies
+        working-directory: ./web
+        run: |
+          pnpm install
+      
+      - name: Build app
+        working-directory: ./web
+        run: |
+          pnpm build
+        
+      - name: build modules file
+        run: |
+           raw/ zimaos_status.raw

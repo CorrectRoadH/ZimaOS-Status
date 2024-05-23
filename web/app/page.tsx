@@ -1,6 +1,6 @@
 "use client"
 import { useUsage } from "@/lib/api";
-import { useZimaAuth } from "@/lib/auth";
+// import { useZimaAuth } from "@/lib/auth";
 import axios from "axios";
 import { useEffect } from "react";
 
@@ -22,9 +22,9 @@ function PerformanceCard({title,value}:PerformanceCardProps) {
 export default function Home() {
 
   useEffect(() => {
-    const zimaAuthAxios = axios.create();
-    useZimaAuth(zimaAuthAxios);  
-    zimaAuthAxios.get('http://10.0.0.83/')
+    // const zimaAuthAxios = axios.create();
+    // useZimaAuth(zimaAuthAxios);  
+    // zimaAuthAxios.get('http://10.0.0.83/')
   }, []);
 
   const { data, isLoading } = useUsage();
