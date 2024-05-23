@@ -71,7 +71,7 @@ jobs:
 
       - name: build modules file
         run: |
-           raw/ zimaos_status.raw
+          mksquashfs raw/ zimaos_status.raw
 
       # relase raw to release
       - name: Release
