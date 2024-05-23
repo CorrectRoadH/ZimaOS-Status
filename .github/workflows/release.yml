@@ -73,11 +73,6 @@ jobs:
         run: |
           mksquashfs raw/ zimaos_status.raw
 
-      # relase raw to release
-      - name: Release
-        run: |
-          goreleaser release --rm-dist
-
       - uses: actions/upload-artifact@v4
         with:
           name: zimaos_status.raw
