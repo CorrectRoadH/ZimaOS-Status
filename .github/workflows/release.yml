@@ -60,7 +60,24 @@ jobs:
         working-directory: ./web
         run: |
           pnpm build
-        
+      
+      - name: Build Backend
+        run: |
+          go build -o ./raw/usr/bin/zimaos_status ./main.go
+
       - name: build modules file
         run: |
            raw/ zimaos_status.raw
+
+      # relase raw to release
+      - name: Release
+        run: |
+          goreleaser release --rm-dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: zimaos_status.raw
+          path: zimaos_status.raw
+      
+
+        

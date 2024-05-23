@@ -1,7 +1,28 @@
 {
     "name": "zimaos_status",
-    "ui": {},
-    "service":[
-        
-    ]
+    "ui": {
+        "name": "zimaos_status",
+        "title": {
+          "en_us": "Status"
+        },
+        "prefetch": true,
+        "show": true,
+        "entry": "/modules/zimaos_status/index.html",
+        "icon": "/modules/zimaos_status/appicon.svg",
+        "description": "Performance Status",
+        "formality": {
+          "type": "newtab",
+          "props": {
+            "width": "100vh",
+            "height": "100vh",
+            "hasModalCard": true,
+            "animation": "zoom-in"
+          }
+        }
+    },
+    "services": [
+        {
+            "name": "zimaos-status"
+        }
+    ]     
 }
