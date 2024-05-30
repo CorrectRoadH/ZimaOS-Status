@@ -4,15 +4,19 @@ import useSWR from 'swr'
 
 const client = createClient<paths>({ baseUrl: "/v2/status/" });
 
-async function  getCPUHistoryData(){
-    const currentTimestamp = new Date().getTime();
-    const OneMinuteAgo = 0;
+async function  getCPUHistoryData(duration: string){
+    //duration like `cpu 15`
+    const durationMin = Number(duration.split(' ')[1]) || 15;
+
+    const currentTimestamp = Math.floor(new Date().getTime()/1000);
+    const OneMinuteAgo = currentTimestamp - (60*durationMin);
     const {
         data, // only present if 2XX response
         error, // only present if 4XX or 5XX response
       } = await client.GET("/history/cpu",{
         params: {
             query: { 
+                // / 100
                 start: OneMinuteAgo.toString(),
                 end: currentTimestamp.toString(),
             },
@@ -21,8 +25,8 @@ async function  getCPUHistoryData(){
     
 }
 
-const useCPUUsageHistory = () => {
-    const {data,isLoading,error}= useSWR('cpu',getCPUHistoryData, {
+const useCPUUsageHistory = (duration: number) => {
+    const {data,isLoading,error}= useSWR(`cpu ${duration}`,getCPUHistoryData, {
         refreshInterval: 30000, // 3秒钟
       });
     

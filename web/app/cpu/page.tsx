@@ -1,17 +1,30 @@
 "use client";
-import { LineChart, Line, XAxis, YAxis } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis } from 'recharts';
 import { useCPUUsageHistory } from "@/lib/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const RenderLineChart = () => {
+interface RenderLineChartProps{
+  duration: number;
+}
+const RenderLineChart = ({duration}:RenderLineChartProps) => {
 
-    const {data} = useCPUUsageHistory();
+    const {data} = useCPUUsageHistory(duration);
     return (
-      <LineChart width={800} height={400} data={data}>
-          <XAxis dataKey="timestamp" />
+      <AreaChart
+        width={800}
+        height={400}
+        data={data}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+          {/* <XAxis dataKey="timestamp" /> */}
           <YAxis />
-        <Line type="monotone" dataKey="percent" stroke="#8884d8" strokeWidth={2}/>
-      </LineChart>
+          <Area type="monotone" dataKey="percent" stroke="#8884d8" fill="#8884d8" />
+      </AreaChart>
     )
   };
   
@@ -31,21 +44,23 @@ export default function Page() {
                   </TabsList>
 
                   <TabsContent value="min">
-                    <RenderLineChart />
+                    <RenderLineChart duration={15} />
                   </TabsContent>
                   <TabsContent value="hour">
-                    <RenderLineChart />
+                    <RenderLineChart duration={60} />
                   </TabsContent>
                   <TabsContent value="day">
-                    <RenderLineChart />
+                    <RenderLineChart duration={720} />
                   </TabsContent>
                   <TabsContent value="week">
-                    <RenderLineChart />
+                    <RenderLineChart duration={5040} />
                   </TabsContent>
                 </Tabs>
 
                 <div>
-                    {/* <RenderLineChart /> */}
+                  <div>1 Min Avg Load</div> 
+                  <div>3 Min Avg Load</div> 
+                  <div>5 Min Avg Load</div> 
                 </div>
             </div>
         </div>
