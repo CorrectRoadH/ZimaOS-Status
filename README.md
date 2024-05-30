@@ -1,2 +1,2 @@
-# ZimaOS-ModManagement
-Mod management service manages ZimaOS module lifecycle, such as creation, running, etc.
+# ZimaOS Status
+ZimaOS Status is Module Application for ZimaOS.
