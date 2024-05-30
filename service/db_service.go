@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -19,6 +20,11 @@ const (
 )
 
 func NewDBService() *DBService {
+	// create DATA path if not exsit
+	if _, err := os.Stat(DataPath); os.IsNotExist(err) {
+		os.MkdirAll(DataPath, os.ModePerm)
+	}
+
 	db, err := sql.Open("sqlite3", "file:"+DataPath+"/data.db?cache=shared&mode=rwc")
 	if err != nil {
 		panic(err)
